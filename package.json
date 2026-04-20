@@ -38,6 +38,7 @@
 	},
 	"dependencies": {
 		"@iconify-json/mingcute": "^1.2.7",
-		"@iconify/svelte": "^5.2.1"
+		"@iconify/svelte": "^5.2.1",
+		"@leaningtech/browserpod": "^2.1.0"
 	}
 }
