@@ -11,12 +11,16 @@
 	let { activePanel = '', onPanelToggle }: Props = $props();
 
 	const navItems = [
-		{ id: 'terminal', icon: 'mingcute:terminal-line', label: 'Terminal' },
-		{ id: 'models', icon: 'mingcute:ai-line', label: 'Models' },
-		{ id: 'sessions', icon: 'mingcute:history-line', label: 'Sessions' }
+		//{ id: 'terminal', icon: 'mingcute:terminal-line', label: 'Terminal' },
+		//{ id: 'models', icon: 'mingcute:ai-line', label: 'Models' },
+		//{ id: 'sessions', icon: 'mingcute:history-line', label: 'Sessions' }
 	];
 
-	const bottomItems = [{ id: 'settings', icon: 'mingcute:settings-3-line', label: 'Settings' }];
+	const bottomItems = [
+		{
+			/*id: 'settings', icon: 'mingcute:settings-3-line', label: 'Settings'*/
+		}
+	];
 </script>
 
 {#snippet navButton(item: { id: string; icon: string; label: string })}
@@ -31,7 +35,7 @@
 
 		<!-- Side Labels which appear next to the icon-->
 		<span
-			class="pointer-events-none absolute left-full ml-2 flex items-center opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+			class="pointer-events-none absolute left-full z-10 ml-2 flex items-center opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
 		>
 			<span class="h-2 w-2 rotate-45 bg-gray-800"></span>
 			<span class="-ml-1 rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-gray-100">
@@ -41,7 +45,7 @@
 	</button>
 {/snippet}
 
-<aside class="flex h-full w-sidebar flex-col border-r border-white/10 bg-bc-sidebar">
+<aside class="relative flex h-full w-sidebar flex-col border-r border-white/10 bg-bc-sidebar">
 	<div class="flex items-center justify-center py-3">
 		<a href={resolve('/')} title="BrowserCode">
 			<img src={favicon} alt="BrowserCode" class="h-7 w-7 brightness-0 invert" />

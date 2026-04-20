@@ -25,6 +25,7 @@ export async function bootCLI() {
 
 export async function copyFile(pod, path, prefix) {
 	const normalizedPrefix = prefix.endsWith('/') ? prefix.slice(0, -1) : prefix;
+	console.log(path);
 	const f = await pod.createFile(`${normalizedPrefix}/${path}`, 'binary');
 	const resp = await fetch(path);
 	const buf = await resp.arrayBuffer();
