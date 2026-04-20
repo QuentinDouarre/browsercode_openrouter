@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import UtilityBar from '$lib/components/UtilityBar.svelte';
+
 	let { children } = $props();
 
 	let activePanel = $state('');
@@ -23,7 +24,7 @@
 
 			{/if} -->
 
-			<main class="flex-1 overflow-hidden">
+			<main class="flex min-h-0 min-w-0 flex-1 overflow-hidden">
 				{@render children()}
 			</main>
 		</div>
