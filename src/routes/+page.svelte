@@ -2,103 +2,176 @@
 	import Terminal from '$lib/components/Terminal.svelte';
 	import Portal from '$lib/components/Portal.svelte';
 
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { bootCLI } from '$lib/utils/main';
 
+	type PortalItem = { port: number; url: string };
+	type PortalUpdate = { port: number; url: string | null; active: boolean };
+
 	let portalUrl: string | '' = '';
-	let portalDebug = true;
+	let portalDebug = false;
+	let portals: PortalItem[] = [];
+	let selectedPort: number | null = null;
+	let showPortalMenu = false;
+	let showPortalInfo = false;
+	let copied = false;
+	let qrCodeCanvas: HTMLCanvasElement | null = null;
+	let qrError = '';
+	let copiedTimeout: ReturnType<typeof setTimeout>;
+	let terminalComponent: any;
 
-	let containerEl: HTMLDivElement | null = null;
-	let isDragging = false;
-	let portalWidthPercent = 50;
+	function applyPortalUpdate(update: PortalUpdate) {
+		const next = [...portals];
+		const idx = next.findIndex((item) => item.port === update.port);
 
-	const MIN_PORTAL_PERCENT = 20;
-	const MAX_PORTAL_PERCENT = 80;
+		if (update.active && update.url) {
+			if (idx >= 0) {
+				next[idx] = { port: update.port, url: update.url };
+			} else {
+				next.push({ port: update.port, url: update.url });
+			}
 
-	function clamp(value: number, min: number, max: number) {
-		return Math.min(max, Math.max(min, value));
+			next.sort((a, b) => a.port - b.port);
+			portals = next;
+
+			selectedPort = update.port;
+			portalUrl = update.url;
+
+			// Trigger terminal resize after portal appears
+			tick().then(() => {
+				terminalComponent?.triggerResize();
+			});
+			return;
+		}
+
+		if (idx >= 0) {
+			next.splice(idx, 1);
+		}
+		portals = next;
+
+		if (selectedPort === update.port || !next.some((item) => item.port === selectedPort)) {
+			const fallback = next[0];
+			selectedPort = fallback?.port ?? null;
+			portalUrl = fallback?.url ?? '';
+		}
 	}
 
-	function setPortalWidthFromClientX(clientX: number) {
-		if (!containerEl) return;
+	function onPortChange(event: Event) {
+		const value = Number((event.currentTarget as HTMLSelectElement).value);
+		if (!Number.isInteger(value)) return;
 
-		const rect = containerEl.getBoundingClientRect();
-		if (rect.width <= 0) return;
-
-		const leftWidth = clientX - rect.left;
-		const leftPercent = (leftWidth / rect.width) * 100;
-		const nextPortalPercent = 100 - leftPercent;
-
-		portalWidthPercent = clamp(nextPortalPercent, MIN_PORTAL_PERCENT, MAX_PORTAL_PERCENT);
+		selectedPort = value;
+		const selected = portals.find((item) => item.port === value);
+		portalUrl = selected?.url ?? '';
+		closePortalOverlays();
 	}
 
-	function onDividerPointerDown(event: PointerEvent) {
-		if (!portalUrl && !portalDebug) return;
-		event.preventDefault();
-		isDragging = true;
-		(event.currentTarget as HTMLElement)?.setPointerCapture?.(event.pointerId);
-		setPortalWidthFromClientX(event.clientX);
+	function togglePortalMenu() {
+		showPortalMenu = !showPortalMenu;
+		if (showPortalMenu) showPortalInfo = false;
 	}
 
-	function onWindowPointerMove(event: PointerEvent) {
-		if (!isDragging) return;
-		setPortalWidthFromClientX(event.clientX);
+	function closePortalOverlays() {
+		showPortalMenu = false;
+		showPortalInfo = false;
+		qrError = '';
 	}
 
-	function stopDragging() {
-		isDragging = false;
+	async function renderQRCode(url: string) {
+		qrError = '';
+		try {
+			await tick();
+			if (!qrCodeCanvas) return;
+
+			await QRCode.toCanvas(qrCodeCanvas, url, {
+				width: 180,
+				margin: 1,
+				errorCorrectionLevel: 'M',
+				color: {
+					dark: '#f4f4f5',
+					light: '#111111'
+				}
+			});
+		} catch (error) {
+			console.error('Failed to generate QR code:', error);
+			qrError = 'Unable to generate QR code';
+		}
+	}
+
+	async function showQRCodePanel() {
+		if (!portalUrl) return;
+		showPortalMenu = false;
+		showPortalInfo = true;
+		await renderQRCode(portalUrl);
+	}
+
+	function openPortalInNewTab() {
+		if (!portalUrl) return;
+		showPortalMenu = false;
+		window.open(portalUrl, '_blank', 'noopener,noreferrer');
+	}
+
+	async function copyPortalURL() {
+		if (!portalUrl) return;
+		showPortalMenu = false;
+		await navigator.clipboard.writeText(portalUrl);
+		copied = true;
+		clearTimeout(copiedTimeout);
+		copiedTimeout = setTimeout(() => (copied = false), 1200);
 	}
 
 	onMount(() => {
-		bootCLI((url) => {
-			portalUrl = url;
+		bootCLI((update: PortalUpdate | string) => {
+			if (typeof update === 'string') {
+				let parsed: URL;
+				try {
+					parsed = new URL(update);
+				} catch {
+					return;
+				}
+				const port = Number(parsed.port);
+				if (!Number.isInteger(port) || port <= 0) return;
+				applyPortalUpdate({ port, url: update, active: true });
+				return;
+			}
+
+			applyPortalUpdate(update);
 		});
 
-		window.addEventListener('pointermove', onWindowPointerMove);
-		window.addEventListener('pointerup', stopDragging);
-		window.addEventListener('pointercancel', stopDragging);
-
 		return () => {
-			window.removeEventListener('pointermove', onWindowPointerMove);
-			window.removeEventListener('pointerup', stopDragging);
-			window.removeEventListener('pointercancel', stopDragging);
+			clearTimeout(copiedTimeout);
 		};
 	});
 </script>
 
-<div bind:this={containerEl} class="flex h-full min-h-0 w-full min-w-0 flex-row">
-	<div
-		class="min-h-0 min-w-0 overflow-hidden bg-black"
-		style={`width: ${portalUrl || portalDebug ? 100 - portalWidthPercent : 100}%`}
-	>
-		<Terminal />
+<div class="flex h-full min-h-0 w-full min-w-0 flex-row">
+	<div class="min-h-0 min-w-0 flex-1 overflow-hidden bg-black">
+		<Terminal bind:this={terminalComponent} />
 	</div>
 
-	<div
-		class="relative min-h-0 min-w-0 overflow-hidden border-l border-zinc-700 transition-opacity duration-300 ease-in-out"
-		class:opacity-100={!!portalUrl || portalDebug}
-		class:opacity-0={!portalUrl && !portalDebug}
-		class:pointer-events-none={!portalUrl && !portalDebug}
-		style={`width: ${portalUrl || portalDebug ? portalWidthPercent : 0}%`}
-	>
+	{#if portals.length > 0}
 		<div
-			class="absolute top-0 -left-1 z-20 h-full w-2 transition-all duration-200 ease-out select-none"
-			class:cursor-col-resize={!!portalUrl || portalDebug}
-			class:pointer-events-auto={!!portalUrl || portalDebug}
-			class:pointer-events-none={!portalUrl && !portalDebug}
-			on:pointerdown={onDividerPointerDown}
-			role="separator"
-			aria-label="Resize terminal and portal panels"
-			aria-orientation="vertical"
-			tabindex="-1"
-		></div>
-
-		{#if portalUrl}
-			<Portal src={portalUrl} />
-		{:else if portalDebug}
-			<div class="flex h-full w-full items-center justify-center text-xs text-zinc-400">
-				Portal debug mode (no URL)
+			class="portal-container relative flex min-h-0 min-w-0 flex-1 overflow-hidden border-l border-zinc-700"
+		>
+			<div class="min-h-0 min-w-0 flex-1 overflow-hidden">
+				<Portal
+					src={portalUrl}
+					debug={portalDebug}
+					{portals}
+					{selectedPort}
+					showMenu={showPortalMenu}
+					showInfo={showPortalInfo}
+					{copied}
+					{qrError}
+					{qrCodeCanvas}
+					{onPortChange}
+					onToggleMenu={togglePortalMenu}
+					onCopyLink={copyPortalURL}
+					onOpenNewTab={openPortalInNewTab}
+					onShowQrCode={showQRCodePanel}
+					onCloseOverlays={closePortalOverlays}
+				/>
 			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 </div>

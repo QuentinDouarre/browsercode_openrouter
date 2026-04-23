@@ -1,46 +1,76 @@
-export async function bootCLI(onPortalUrl?: (url: string) => void) {
+type PortalUpdate = { port: number; url: string | null; active: boolean };
+
+export async function bootCLI(onPortalUpdate?: (update: PortalUpdate) => void) {
 	const { BrowserPod } = await import('@leaningtech/browserpod');
 
-	const consoleElement = document.querySelector('#console');
-	const pod = await BrowserPod.boot({ apiKey: import.meta.env.VITE_BP_APIKEY });
+	const consoleElement = document.querySelector('#console') as HTMLElement;
+	const pod = await BrowserPod.boot({
+		apiKey: 'bp1_b6378aaedbafca7a2a80ec461df53314896fd18987304152e6b616c05661adc7'
+	});
 	const terminal = await pod.createDefaultTerminal(consoleElement);
 
-	const homePath = '/home/user';
-	const projectPath = `${homePath}/project`;
-	await pod.createDirectory(projectPath);
-	await copyFile(pod, `project/package.json`, homePath);
+	pod.onPortal((portal) => {
+		const port = Number(portal?.port);
+		const rawUrl = portal?.url;
+		const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
 
-	let unsubscribe: (() => void) | undefined;
-
-	unsubscribe = pod.onPortal((portal) => {
-		if (portal?.url) {
-			console.log(`[portal] port=${portal.port} url=${portal.url}`);
-			onPortalUrl?.(portal.url);
-		} else {
+		if (!Number.isInteger(port) || port <= 0) {
 			console.log('[portal] update', portal);
-			onPortalUrl?.('');
+			return;
+		}
+
+		if (url.length > 0) {
+			console.log(`[portal] active port=${port} url=${url}`);
+			onPortalUpdate?.({ port, url, active: true });
+		} else {
+			console.log(`[portal] removed port=${port}`);
+			onPortalUpdate?.({ port, url: null, active: false });
 		}
 	});
 
+	const homePath = '/home/user';
+	const projectPath = `${homePath}/project`;
+
+	await pod.createDirectory(projectPath);
+	await copyFile(pod, 'project/package.json', homePath);
+
 	await pod.run('npm', ['install', '--ignore-scripts'], {
 		echo: true,
-		terminal: terminal,
+		terminal,
 		cwd: projectPath
 	});
 
 	await pod.run('npm', ['run', 'gemini'], {
 		echo: true,
-		terminal: terminal,
+		terminal,
 		cwd: projectPath
 	});
 }
 
-export async function copyFile(pod, path, prefix) {
+export async function copyFile(
+	pod: {
+		createFile: (
+			path: string,
+			mode: 'binary' | 'text'
+		) => Promise<{
+			write: (data: ArrayBuffer | string) => Promise<void>;
+			close: () => Promise<void>;
+		}>;
+	},
+	path: string,
+	prefix: string
+) {
 	const normalizedPrefix = prefix.endsWith('/') ? prefix.slice(0, -1) : prefix;
 	console.log(path);
-	const f = await pod.createFile(`${normalizedPrefix}/${path}`, 'binary');
+
+	const file = await pod.createFile(`${normalizedPrefix}/${path}`, 'binary');
 	const resp = await fetch(path);
+
+	if (!resp.ok) {
+		throw new Error(`Failed to fetch "${path}" (${resp.status} ${resp.statusText})`);
+	}
+
 	const buf = await resp.arrayBuffer();
-	await f.write(buf);
-	await f.close();
+	await file.write(buf);
+	await file.close();
 }
