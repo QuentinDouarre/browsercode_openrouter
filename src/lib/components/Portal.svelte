@@ -67,72 +67,72 @@
 </script>
 
 {#if portals.length > 0 || debug}
-	<div class="flex h-full min-h-0 w-full min-w-0 flex-col border-t border-white/10 bg-white">
+	<div class="flex h-full min-h-0 w-full min-w-0 flex-col bg-white">
 		<div
 			class="flex h-8 shrink-0 items-center justify-between border-b border-white/10 bg-zinc-900 px-3 text-[11px] font-medium tracking-wide text-white/70"
 		>
-			<div class="flex items-center gap-2">
-				<Icon icon="mingcute:eye-2-line" width="11" height="11" />
+			<div class="flex items-center">
 				<span>Portal</span>
-
-				{#if portals.length > 0}
-					<div class="relative">
-						<select
-							class="h-6 min-w-[80px] appearance-none rounded-md border border-white/20 bg-zinc-800 pr-6 pl-2 text-[11px] font-medium text-white/70 outline-none hover:border-white/30 hover:text-white focus:border-[#4f8cff] focus:ring-2 focus:ring-[#4f8cff]/30"
-							on:change={onPortChange}
-							value={selectedPort ?? undefined}
-							aria-label="Select portal port"
-						>
-							{#each portals as item (item.port)}
-								<option value={item.port}>:{item.port}</option>
-							{/each}
-						</select>
-						<div
-							class="pointer-events-none absolute inset-y-0 right-1 flex items-center text-white/45"
-						>
-							<Icon icon="mingcute:down-line" width="12" height="12" />
-						</div>
-					</div>
-				{/if}
 			</div>
 
 			{#if src}
-				<div class="relative flex items-center gap-1.5">
-					<button
-						on:click={onToggleMenu}
-						class="inline-flex cursor-pointer items-center gap-1 rounded border-none bg-transparent px-1.5 py-0.5 text-[11px] text-white/55 hover:text-white/80"
-					>
-						<Icon icon="mingcute:settings-2-line" width="11" height="11" />
-						<span>{copied ? 'Copied!' : 'Menu'}</span>
-					</button>
-
-					{#if showMenu}
-						<div
-							class="absolute top-[calc(100%+4px)] right-0 z-30 min-w-[168px] rounded-lg border border-white/10 bg-zinc-900 p-1 shadow-[0_12px_26px_rgba(0,0,0,0.22)]"
-						>
-							<button
-								on:click={onCopyLink}
-								class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] text-white/70 hover:bg-white/5 hover:text-white"
+				<div class="flex items-center gap-2">
+					{#if portals.length > 0}
+						<div class="relative">
+							<select
+								class="h-6 min-w-[80px] appearance-none rounded-md border border-white/20 bg-zinc-800 pr-6 pl-2 text-[11px] font-medium text-white/70 outline-none hover:border-white/30 hover:text-white focus:border-[#4f8cff] focus:ring-2 focus:ring-[#4f8cff]/30"
+								on:change={onPortChange}
+								value={selectedPort ?? undefined}
+								aria-label="Select portal port"
 							>
-								<Icon icon="mingcute:copy-2-line" width="11" height="11" />
-								Copy link
-							</button>
-							<button
-								on:click={onOpenNewTab}
-								class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] text-white/70 hover:bg-white/5 hover:text-white"
+								{#each portals as item (item.port)}
+									<option value={item.port}>:{item.port}</option>
+								{/each}
+							</select>
+							<div
+								class="pointer-events-none absolute inset-y-0 right-1 flex items-center text-white/45"
 							>
-								<Icon icon="mingcute:external-link-line" width="11" height="11" />
-								Open in new tab
-							</button>
-							<button
-								on:click={onShowQrCode}
-								class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] text-white/70 hover:bg-white/5 hover:text-white"
-							>
-								<Icon icon="mingcute:qrcode-2-line" width="11" height="11" />
-								Show QR code
-							</button>
+								<Icon icon="mingcute:down-line" width="12" height="12" />
+							</div>
 						</div>
 					{/if}
+					<div class="relative flex items-center gap-1.5">
+						<button
+							on:click={onToggleMenu}
+							class="inline-flex cursor-pointer items-center gap-1 rounded border-none bg-transparent px-1.5 py-0.5 text-[11px] text-white/55 hover:text-white/80"
+						>
+							<Icon icon="mingcute:settings-2-line" width="11" height="11" />
+							<span>{copied ? 'Copied!' : 'Menu'}</span>
+						</button>
+
+						{#if showMenu}
+							<div
+								class="absolute top-[calc(100%+4px)] right-0 z-30 min-w-[168px] rounded-lg border border-white/10 bg-zinc-900 p-1 shadow-[0_12px_26px_rgba(0,0,0,0.22)]"
+							>
+								<button
+									on:click={onCopyLink}
+									class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] text-white/70 hover:bg-white/5 hover:text-white"
+								>
+									<Icon icon="mingcute:copy-2-line" width="11" height="11" />
+									Copy link
+								</button>
+								<button
+									on:click={onOpenNewTab}
+									class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] text-white/70 hover:bg-white/5 hover:text-white"
+								>
+									<Icon icon="mingcute:external-link-line" width="11" height="11" />
+									Open in new tab
+								</button>
+								<button
+									on:click={onShowQrCode}
+									class="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] text-white/70 hover:bg-white/5 hover:text-white"
+								>
+									<Icon icon="mingcute:qrcode-2-line" width="11" height="11" />
+									Show QR code
+								</button>
+							</div>
+						{/if}
+					</div>
 				</div>
 			{/if}
 		</div>
