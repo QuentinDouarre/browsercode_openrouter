@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
+	import favicon from '$lib/assets/favicon.svg';
 	import { stepperState } from '$lib/stores/stepper.svelte';
 
 	let showModal = $state(false);
@@ -92,8 +93,8 @@
 
 			<!-- Header -->
 			<div class="border-b border-white/6 px-6 pt-6 pb-5">
-				<div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
-					<Icon icon="mingcute:code-line" width="20" height="20" class="text-emerald-400" />
+				<div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-white/6">
+					<img src={favicon} alt="BrowserCode" class="h-5 w-5 brightness-0 invert opacity-60 grayscale" />
 				</div>
 				<h2 id="stepper-title" class="text-lg font-semibold text-zinc-100">
 					Welcome to BrowserCode
@@ -130,7 +131,7 @@
 					<button
 						onclick={() => (currentStep = i + 1)}
 						class="h-1 rounded-full transition-all duration-200 {currentStep === i + 1
-							? 'w-5 bg-emerald-500'
+							? 'w-5 bg-white/60'
 							: 'w-1.5 bg-white/15 hover:bg-white/30'}"
 						aria-label="Go to step {i + 1}"
 					></button>
@@ -159,7 +160,7 @@
 					{#if currentStep < totalSteps}
 						<button
 							onclick={next}
-							class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-black transition hover:bg-emerald-400"
+							class="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/15 hover:text-white"
 						>
 							Next
 							<Icon icon="mingcute:arrow-right-line" width="16" height="16" />
@@ -167,7 +168,7 @@
 					{:else}
 						<button
 							onclick={close}
-							class="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-black transition hover:bg-emerald-400"
+							class="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white/80 transition hover:bg-white/15 hover:text-white"
 						>
 							<Icon icon="mingcute:check-fill" width="16" height="16" />
 							Get started

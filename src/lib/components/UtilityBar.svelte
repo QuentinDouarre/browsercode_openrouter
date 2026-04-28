@@ -12,7 +12,7 @@
 		<span class="text-white/40">BrowserCode v0.1.0</span>
 	</span>
 
-	<span class="flex items-center gap-1.5 text-[11.5px] text-white/40">
+	<span class="flex items-center gap-1.5 text-[11.5px] text-white/35">
 		<span>Powered by BrowserPod</span>
 		<span class="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[10.5px] text-white/40"
 			>v{pkg.version}</span
