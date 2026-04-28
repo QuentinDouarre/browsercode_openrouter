@@ -2,6 +2,7 @@
 	import Terminal from '$lib/components/Terminal.svelte';
 	import Portal from '$lib/components/Portal.svelte';
 	import Icon from '@iconify/svelte';
+	import opencodeLogoSrc from '$lib/assets/opencode-logo.svg';
 
 	import { onMount } from 'svelte';
 	import { bootCLI } from '$lib/utils/main';
@@ -61,7 +62,8 @@
 	const toolItems = [
 		{ id: 'gemini', icon: 'simple-icons:googlegemini', label: 'Gemini', disabled: false },
 		{ id: 'claude', icon: 'mingcute:claude-line', label: 'Claude Code', disabled: true },
-		{ id: 'codex', icon: 'hugeicons:chat-gpt', label: 'Codex CLI', disabled: true }
+		{ id: 'codex', icon: 'hugeicons:chat-gpt', label: 'Codex CLI', disabled: true },
+		{ id: 'opencode', icon: null, label: 'OpenCode', disabled: true }
 	];
 
 	function toggleToolMenu() {
@@ -294,7 +296,11 @@
 									? 'cursor-not-allowed text-white/20'
 									: 'text-white/60 hover:bg-white/6 hover:text-white/90'}"
 						>
-							<Icon icon={item.icon} width="18" height="18" />
+							{#if item.icon}
+								<Icon icon={item.icon} width="20" height="20" />
+							{:else}
+								<img src={opencodeLogoSrc} alt={item.label} class="h-5 w-5 opacity-20" />
+							{/if}
 							<span class="flex-1 text-[14px] font-medium">{item.label}</span>
 							{#if activeTool === item.id}
 								<Icon icon="mingcute:check-line" width="14" height="14" class="text-white/60" />
@@ -317,7 +323,7 @@
 					? 'bg-white/4 text-white/90'
 					: 'bg-transparent text-white/30 hover:text-white/60'}"
 			>
-				<Icon icon="mingcute:menu-line" width="18" height="18" />
+				<Icon icon="mingcute:menu-line" width="20" height="20" />
 				<span>Tools</span>
 			</button>
 			<button
@@ -327,7 +333,7 @@
 					? 'bg-white/4 text-white/90'
 					: 'bg-transparent text-white/30 hover:text-white/60'}"
 			>
-				<Icon icon="mingcute:terminal-line" width="18" height="18" />
+				<Icon icon="mingcute:terminal-line" width="20" height="20" />
 				<span>Terminal</span>
 			</button>
 			{#if portals.length > 0}
@@ -338,7 +344,7 @@
 						? 'bg-white/4 text-white/90'
 						: 'bg-transparent text-white/30 hover:text-white/60'}"
 				>
-					<Icon icon="mingcute:eye-2-line" width="18" height="18" />
+					<Icon icon="mingcute:eye-2-line" width="20" height="20" />
 					<span>Preview</span>
 				</button>
 			{/if}
@@ -346,7 +352,7 @@
 				onclick={() => (stepperState.open = true)}
 				class="flex w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 border-none text-[11px] font-medium text-white/30 transition-colors hover:text-white/60"
 			>
-				<Icon icon="mingcute:question-line" width="18" height="18" />
+				<Icon icon="mingcute:question-line" width="20" height="20" />
 				<span>Help</span>
 			</button>
 		</nav>

@@ -14,6 +14,7 @@
 	const navItems = [
 		{ id: 'gemini', icon: 'simple-icons:googlegemini', label: 'Gemini', disabled: false },
 		{ id: 'claude', icon: 'mingcute:claude-line', label: 'Claude Code', disabled: true },
+		{ id: 'codex', icon: 'hugeicons:chat-gpt', label: 'Codex CLI', disabled: true },
 		{ id: 'codex', icon: 'hugeicons:chat-gpt', label: 'Codex CLI', disabled: true }
 	];
 </script>
@@ -74,7 +75,9 @@
 				class="pointer-events-none absolute left-full z-10 ml-2.5 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
 			>
 				<span class="h-1.5 w-1.5 rotate-45 bg-zinc-800"></span>
-				<span class="-ml-0.5 rounded bg-zinc-800 px-2 py-1 text-[12px] whitespace-nowrap text-zinc-200">
+				<span
+					class="-ml-0.5 rounded bg-zinc-800 px-2 py-1 text-[12px] whitespace-nowrap text-zinc-200"
+				>
 					Help
 				</span>
 			</span>
