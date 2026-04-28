@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
+	import { stepperState } from '$lib/stores/stepper.svelte';
 
 	let showModal = $state(false);
 	let currentStep = $state(1);
 	const totalSteps = 4;
+
+	$effect(() => {
+		if (stepperState.open && !showModal) {
+			showModal = true;
+			currentStep = 1;
+		}
+	});
 
 	const steps = [
 		{
@@ -50,6 +58,7 @@
 
 	function close() {
 		showModal = false;
+		stepperState.open = false;
 	}
 
 	function handleBackdropClick(e: MouseEvent) {
@@ -117,7 +126,7 @@
 
 			<!-- Step indicators -->
 			<div class="flex items-center gap-1.5 px-6 pb-1">
-				{#each Array(totalSteps) as _, i}
+				{#each Array(totalSteps) as _, i (i)}
 					<button
 						onclick={() => (currentStep = i + 1)}
 						class="h-1 rounded-full transition-all duration-200 {currentStep === i + 1
@@ -129,7 +138,7 @@
 			</div>
 
 			<!-- Footer -->
-			<div class="flex items-center justify-between border-t border-white/[0.06] px-6 py-4">
+			<div class="flex items-center justify-between border-t border-white/6 px-6 py-4">
 				<button
 					onclick={prev}
 					disabled={currentStep === 1}

@@ -5,6 +5,7 @@
 
 	import { onMount } from 'svelte';
 	import { bootCLI } from '$lib/utils/main';
+	import { stepperState } from '$lib/stores/stepper.svelte';
 
 	type PortalItem = { port: number; url: string };
 	type PortalUpdate = { port: number; url: string | null; active: boolean };
@@ -267,6 +268,13 @@
 					<span>Preview</span>
 				</button>
 			{/if}
+			<button
+				onclick={() => (stepperState.open = true)}
+				class="flex w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 border-none text-[11px] font-medium text-white/30 transition-colors hover:text-white/60"
+			>
+				<Icon icon="mingcute:question-line" width="18" height="18" />
+				<span>Help</span>
+			</button>
 		</nav>
 	{/if}
 </div>

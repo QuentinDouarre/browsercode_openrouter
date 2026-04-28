@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import favicon from '$lib/assets/favicon.svg';
 	import Icon from '@iconify/svelte';
+	import { stepperState } from '$lib/stores/stepper.svelte';
 
 	interface Props {
 		activePanel?: string;
@@ -60,4 +61,23 @@
 			{@render navButton(item)}
 		{/each}
 	</nav>
+
+	<div class="flex items-center justify-center px-1 pb-3">
+		<button
+			onclick={() => (stepperState.open = true)}
+			class="group relative flex items-center justify-center rounded p-2 text-zinc-600 transition hover:bg-white/5 hover:text-zinc-300"
+			title="Help"
+		>
+			<Icon icon="mingcute:question-line" width="20" height="20" />
+
+			<span
+				class="pointer-events-none absolute left-full z-10 ml-2.5 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
+			>
+				<span class="h-1.5 w-1.5 rotate-45 bg-zinc-800"></span>
+				<span class="-ml-0.5 rounded bg-zinc-800 px-2 py-1 text-[12px] whitespace-nowrap text-zinc-200">
+					Help
+				</span>
+			</span>
+		</button>
+	</div>
 </aside>
