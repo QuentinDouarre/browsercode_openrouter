@@ -67,7 +67,7 @@
 	<div class="flex h-full min-h-0 w-full min-w-0 flex-col">
 		<!-- Header -->
 		<div
-			class="flex h-10 shrink-0 items-center justify-between border-b border-white/[0.06] bg-[#111111] px-3"
+			class="flex h-10 shrink-0 items-center justify-between border-b border-white/6 bg-[#111111] px-3"
 		>
 			<div class="flex items-center gap-2 text-[13px] text-white/35">
 				<Icon icon="mingcute:eye-2-line" width="14" height="14" />
@@ -108,15 +108,24 @@
 						<div
 							class="absolute top-[calc(100%+4px)] right-0 z-30 min-w-[168px] rounded-lg border border-white/10 bg-[#111111] p-1 shadow-[0_12px_26px_rgba(0,0,0,0.55)]"
 						>
-							<button onclick={onCopyLink} class="flex w-full cursor-pointer items-center gap-2 rounded border-none bg-transparent px-2 py-1.5 text-left text-[12px] text-white/70 transition-colors hover:bg-white/[0.06]">
+							<button
+								onclick={onCopyLink}
+								class="flex w-full cursor-pointer items-center gap-2 rounded border-none bg-transparent px-2 py-1.5 text-left text-[12px] text-white/70 transition-colors hover:bg-white/[0.06]"
+							>
 								<Icon icon="mingcute:copy-2-line" width="13" height="13" />
 								Copy link
 							</button>
-							<button onclick={onOpenNewTab} class="flex w-full cursor-pointer items-center gap-2 rounded border-none bg-transparent px-2 py-1.5 text-left text-[12px] text-white/70 transition-colors hover:bg-white/[0.06]">
+							<button
+								onclick={onOpenNewTab}
+								class="flex w-full cursor-pointer items-center gap-2 rounded border-none bg-transparent px-2 py-1.5 text-left text-[12px] text-white/70 transition-colors hover:bg-white/[0.06]"
+							>
 								<Icon icon="mingcute:external-link-line" width="13" height="13" />
 								Open in new tab
 							</button>
-							<button onclick={onShowQrCode} class="flex w-full cursor-pointer items-center gap-2 rounded border-none bg-transparent px-2 py-1.5 text-left text-[12px] text-white/70 transition-colors hover:bg-white/[0.06]">
+							<button
+								onclick={onShowQrCode}
+								class="flex w-full cursor-pointer items-center gap-2 rounded border-none bg-transparent px-2 py-1.5 text-left text-[12px] text-white/70 transition-colors hover:bg-white/[0.06]"
+							>
 								<Icon icon="mingcute:qrcode-2-line" width="13" height="13" />
 								Show QR code
 							</button>

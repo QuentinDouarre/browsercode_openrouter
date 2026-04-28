@@ -1,11 +1,12 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import pkg from '@leaningtech/browserpod/package.json';
 </script>
 
 <footer
-	class="hidden h-9 shrink-0 items-center justify-between border-t border-white/[0.06] bg-[#111111] px-4 md:flex"
+	class="hidden h-9 shrink-0 items-center justify-between border-t border-white/6 bg-[#111111] px-4 md:flex"
 >
-	<span class="text-[12px] text-white/25">Made with BrowserPod v2.2.1</span>
+	<span class="text-[12px] text-white/25">Made with BrowserPod v{pkg.version}</span>
 	<a
 		href="https://labs.leaningtech.com/blog/browserpod-20"
 		target="_blank"
