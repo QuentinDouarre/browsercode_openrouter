@@ -5,22 +5,27 @@
 </script>
 
 <footer
-	class="hidden h-9 shrink-0 items-center justify-between border-t border-white/6 bg-[#111111] px-4 md:flex"
+	class="hidden h-8 shrink-0 items-center justify-between border-t border-white/[0.05] bg-[#0a0a0b] px-4 md:flex"
 >
-	<span class="flex items-center gap-1.5 text-[12px] text-white/45">
-		<img src={favicon} alt="BrowserPod" class="mb-[0.25] size-3.5 opacity-254 grayscale" />
-		BrowserCode v0.1.0
+	<span class="flex items-center gap-2 text-[11.5px]">
+		<img src={favicon} alt="BrowserCode logo" class="h-4 w-4 grayscale" />
+		<span class="text-white/40">BrowserCode v0.1.0</span>
 	</span>
-	<span class="flex items-center gap-1.5 text-[12px] text-emerald-400/75">
-		Made with BrowserPod v{pkg.version} © {new Date().getFullYear()}
+
+	<span class="flex items-center gap-1.5 text-[11.5px] text-white/40">
+		<span>Powered by BrowserPod</span>
+		<span class="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[10.5px] text-white/40"
+			>v{pkg.version}</span
+		>
 	</span>
+
 	<a
 		href="https://labs.leaningtech.com/blog/browserpod-20"
 		target="_blank"
 		rel="noopener noreferrer"
-		class="flex items-center gap-1 text-[12px] text-white/45 transition hover:text-white/55"
+		class="flex items-center gap-1 text-[11.5px] text-white/40 transition-colors duration-150 hover:text-white/75"
 	>
-		<span>Latest: Git, bash, BrowserPod 2.0</span>
-		<Icon icon="mingcute:arrow-right-up-line" width="13" height="13" />
+		<span>Git, bash & BrowserPod 2.0</span>
+		<Icon icon="mingcute:arrow-right-up-line" width="12" height="12" />
 	</a>
 </footer>

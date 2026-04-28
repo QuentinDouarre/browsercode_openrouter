@@ -21,71 +21,83 @@
 </script>
 
 {#snippet navButton(item: { id: string; icon: string | null; label: string; disabled: boolean })}
-	<button
-		onclick={() => !item.disabled && onPanelToggle?.(item.id)}
-		class="group relative flex items-center justify-center rounded p-2 transition
-			{activePanel === item.id
-			? 'bg-white/10 text-white'
-			: item.disabled
-				? 'cursor-not-allowed text-zinc-700'
-				: 'text-zinc-600 hover:bg-white/5 hover:text-zinc-300'}"
-		disabled={item.disabled}
-	>
-		{#if item.icon}
-			<Icon icon={item.icon} width="22" height="22" />
-		{:else}
-			<img src={opencodeLogoSrc} alt={item.label} class="h-5 w-5 opacity-20" />
-		{/if}
-
-		<span
-			class="pointer-events-none absolute left-full z-10 ml-2.5 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
+	{@const isActive = activePanel === item.id}
+	<div class="relative">
+		<button
+			onclick={() => !item.disabled && onPanelToggle?.(item.id)}
+			class="group relative flex w-full items-center justify-center rounded-md p-2.5 transition-all duration-150
+				{isActive
+				? 'bg-white/8 text-white'
+				: item.disabled
+					? 'cursor-not-allowed text-white/15'
+					: 'text-white/35 hover:bg-white/5 hover:text-white/70'}"
+			disabled={item.disabled}
 		>
-			<span class="h-1.5 w-1.5 rotate-45 bg-zinc-800"></span>
+			{#if item.icon}
+				<Icon icon={item.icon} width="20" height="20" />
+			{:else}
+				<img src={opencodeLogoSrc} alt={item.label} class="h-5 w-5 opacity-15" />
+			{/if}
+
 			<span
-				class="-ml-0.5 flex items-center gap-1.5 rounded bg-zinc-800 px-2 py-1 text-[12px] whitespace-nowrap text-zinc-200"
+				class="pointer-events-none absolute left-full z-50 ml-3 flex items-center opacity-0 transition-opacity duration-100 group-hover:opacity-100"
 			>
-				<span>{item.label}</span>
-				{#if item.disabled}
-					<span class="text-zinc-500">· Coming soon</span>
-				{/if}
+				<span class="h-1.5 w-1.5 rotate-45 border-b border-l border-white/8 bg-zinc-900"></span>
+				<span
+					class="-ml-px flex items-center gap-1.5 rounded-md border border-white/8 bg-zinc-900 px-2.5 py-1.5 text-[11.5px] leading-none whitespace-nowrap text-white/80 shadow-lg shadow-black/40"
+				>
+					<span class="font-medium">{item.label}</span>
+					{#if item.disabled}
+						<span class="text-white/30">· Soon</span>
+					{/if}
+				</span>
 			</span>
-		</span>
-	</button>
+		</button>
+	</div>
 {/snippet}
 
 <aside
-	class="relative hidden h-full w-sidebar flex-col border-r border-white/6 bg-[#111111] md:flex"
+	class="relative hidden h-full w-sidebar flex-col border-r border-white/[0.05] bg-[#0f0f10] md:flex"
 >
-	<div class="flex items-center justify-center py-3">
-		<a href={resolve('/')} title="BrowserCode">
-			<img src={favicon} alt="BrowserCode" class="h-7 w-7 opacity-70 brightness-0 invert" />
+	<div class="flex items-center justify-center py-3.5">
+		<a
+			href={resolve('/')}
+			title="BrowserCode"
+			class="rounded-md p-1 opacity-50 transition-opacity duration-150 hover:opacity-80"
+		>
+			<img src={favicon} alt="BrowserCode" class="h-6 w-6 brightness-0 invert" />
 		</a>
 	</div>
 
-	<nav class="flex flex-1 flex-col gap-1 px-1 pt-2">
+	<div class="mx-3 h-px bg-white/[0.05]"></div>
+
+	<nav class="flex flex-1 flex-col gap-0.5 px-1.5 pt-2">
 		{#each navItems as item (item.id)}
 			{@render navButton(item)}
 		{/each}
 	</nav>
 
-	<div class="flex items-center justify-center px-1 pb-3">
-		<button
-			onclick={() => (stepperState.open = true)}
-			class="group relative flex items-center justify-center rounded p-2 text-zinc-600 transition hover:bg-white/5 hover:text-zinc-300"
-			title="Help"
-		>
-			<Icon icon="mingcute:question-line" width="22" height="22" />
+	<div class="mx-3 h-px bg-white/[0.05]"></div>
 
-			<span
-				class="pointer-events-none absolute left-full z-10 ml-2.5 flex items-center opacity-0 transition-opacity group-hover:opacity-100"
+	<div class="flex items-center justify-center px-1.5 py-2">
+		<div class="relative">
+			<button
+				onclick={() => (stepperState.open = true)}
+				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65"
 			>
-				<span class="h-1.5 w-1.5 rotate-45 bg-zinc-800"></span>
+				<Icon icon="mingcute:question-line" width="20" height="20" />
+
 				<span
-					class="-ml-0.5 rounded bg-zinc-800 px-2 py-1 text-[12px] whitespace-nowrap text-zinc-200"
+					class="pointer-events-none absolute left-full z-50 ml-3 flex items-center opacity-0 transition-opacity duration-100 group-hover:opacity-100"
 				>
-					Help
+					<span class="h-1.5 w-1.5 rotate-45 border-b border-l border-white/8 bg-zinc-900"></span>
+					<span
+						class="-ml-px rounded-md border border-white/8 bg-zinc-900 px-2.5 py-1.5 text-[11.5px] leading-none font-medium whitespace-nowrap text-white/80 shadow-lg shadow-black/40"
+					>
+						Help & getting started
+					</span>
 				</span>
-			</span>
-		</button>
+			</button>
+		</div>
 	</div>
 </aside>
