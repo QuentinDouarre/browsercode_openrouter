@@ -32,5 +32,5 @@
 			<Icon icon="mingcute:layout-right-line" width="14" height="14" />
 		</button>
 	</div>
-	<div id="console" class="min-h-0 flex-1"></div>
+	<div id="console" class="min-h-0 flex-1 bg-black"></div>
 </div>

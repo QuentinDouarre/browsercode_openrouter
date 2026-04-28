@@ -61,7 +61,6 @@ export async function copyFile(
 	prefix: string
 ) {
 	const normalizedPrefix = prefix.endsWith('/') ? prefix.slice(0, -1) : prefix;
-	console.log(path);
 
 	const file = await pod.createFile(`${normalizedPrefix}/${path}`, 'binary');
 	const resp = await fetch(path);
