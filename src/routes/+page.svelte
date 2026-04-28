@@ -55,6 +55,23 @@
 
 	let isMobile = false;
 	let activeMobileView: 'terminal' | 'preview' = 'terminal';
+	let showToolMenu = false;
+	let activeTool = 'gemini';
+
+	const toolItems = [
+		{ id: 'gemini', icon: 'simple-icons:googlegemini', label: 'Gemini', disabled: false },
+		{ id: 'claude', icon: 'mingcute:claude-line', label: 'Claude Code', disabled: true },
+		{ id: 'codex', icon: 'hugeicons:chat-gpt', label: 'Codex CLI', disabled: true }
+	];
+
+	function toggleToolMenu() {
+		showToolMenu = !showToolMenu;
+	}
+
+	function selectTool(id: string) {
+		activeTool = id;
+		showToolMenu = false;
+	}
 
 	function updateIsMobile() {
 		isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -245,7 +262,58 @@
 
 	<!-- Mobile Bottom Navigator -->
 	{#if isMobile}
+		<!-- Tool menu sheet -->
+		{#if showToolMenu}
+			<button
+				class="fixed inset-0 z-40 bg-black/50"
+				onclick={() => (showToolMenu = false)}
+				aria-label="Close menu"
+			></button>
+			<div class="fixed bottom-12 left-0 right-0 z-50 rounded-t-xl border-t border-white/10 bg-[#111111] pb-2 shadow-[0_-8px_32px_rgba(0,0,0,0.6)]">
+				<div class="flex items-center justify-between px-4 py-3">
+					<span class="text-[13px] font-semibold text-white/60">CLI Tool</span>
+					<button
+						onclick={() => (showToolMenu = false)}
+						class="rounded p-1 text-white/40 hover:text-white/70"
+					>
+						<Icon icon="mingcute:close-line" width="16" height="16" />
+					</button>
+				</div>
+				<div class="px-2">
+					{#each toolItems as item (item.id)}
+						<button
+							onclick={() => !item.disabled && selectTool(item.id)}
+							disabled={item.disabled}
+							class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors
+								{activeTool === item.id
+								? 'bg-white/10 text-white'
+								: item.disabled
+									? 'cursor-not-allowed text-white/20'
+									: 'text-white/60 hover:bg-white/6 hover:text-white/90'}"
+						>
+							<Icon icon={item.icon} width="18" height="18" />
+							<span class="flex-1 text-[14px] font-medium">{item.label}</span>
+							{#if activeTool === item.id}
+								<Icon icon="mingcute:check-line" width="14" height="14" class="text-white/60" />
+							{:else if item.disabled}
+								<span class="text-[11px] text-white/25">Coming soon</span>
+							{/if}
+						</button>
+					{/each}
+				</div>
+			</div>
+		{/if}
+
 		<nav class="flex h-12 shrink-0 items-stretch border-t border-white/6 bg-[#111111]">
+			<button
+				onclick={toggleToolMenu}
+				class="flex w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 border-none text-[11px] font-medium transition-colors {showToolMenu
+					? 'bg-white/4 text-white/90'
+					: 'bg-transparent text-white/30 hover:text-white/60'}"
+			>
+				<Icon icon="mingcute:menu-line" width="18" height="18" />
+				<span>Tools</span>
+			</button>
 			<button
 				onclick={() => (activeMobileView = 'terminal')}
 				class="flex flex-1 cursor-pointer flex-col items-center justify-center gap-0.5 border-none text-[11px] font-medium transition-colors {activeMobileView ===
