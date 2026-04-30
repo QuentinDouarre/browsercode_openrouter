@@ -54,9 +54,7 @@ Gemini can take up to 30 seconds to boot. While it boots, it willl hang silently
 <br clear="right" />
 
 <h2 id="breaking-browsercode">Breaking BrowserCode</h2>
-This is BrowserCode's first beta. Don't be kind to it. Stretch it, bend it, find out what breaks. 
-
-Here are a few walls you might hit:
+This is BrowserCode's first beta. Don't be kind to it. Stretch it, bend it, find out what breaks. Here are a few walls you might hit:
 
 - At launch, Gemini is prompted using a custom GEMINI.md file to help it understand that it is running in a custom environment. However, it may first attempt its default behaviour before referencing the file. 
 BrowserCode doesn't yet support native binaries, for more information, see the [BrowserPod documentation](https://browserpod.io/docs/guides/native-binaries)
