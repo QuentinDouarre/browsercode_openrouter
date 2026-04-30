@@ -6,7 +6,6 @@
 
 	let {
 		src = '',
-		debug = false,
 		portals = [] as PortalItem[],
 		selectedPort = null as number | null,
 		showMenu = false,
@@ -21,7 +20,6 @@
 		onCloseOverlays
 	} = $props<{
 		src?: string;
-		debug?: boolean;
 		portals?: PortalItem[];
 		selectedPort?: number | null;
 		showMenu?: boolean;
@@ -62,7 +60,7 @@
 	});
 </script>
 
-{#if portals.length > 0 || debug}
+{#if portals.length > 0}
 	<div class="flex h-full min-h-0 w-full min-w-0 flex-col">
 		<!-- Header -->
 		<div
@@ -74,7 +72,7 @@
 			</div>
 
 			{#if src}
-				<div class="relative flex items-center gap-1.5">
+				<div class="relative flex items-center gap-1.5 md:mr-28">
 					{#if portals.length > 1}
 						<div class="relative">
 							<select
@@ -169,10 +167,6 @@
 						{/if}
 					</div>
 				{/if}
-			</div>
-		{:else if debug}
-			<div class="flex h-full w-full items-center justify-center text-[12px] text-white/20">
-				Portal debug mode (no URL)
 			</div>
 		{/if}
 	</div>

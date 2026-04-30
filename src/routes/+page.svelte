@@ -12,7 +12,6 @@
 	type PortalUpdate = { port: number; url: string | null; active: boolean };
 
 	let portalUrl: string | '' = '';
-	let portalDebug = false;
 	let portals: PortalItem[] = [];
 	let selectedPort: number | null = null;
 	let showPortalMenu = false;
@@ -243,7 +242,6 @@
 			>
 				<Portal
 					src={portalUrl}
-					debug={portalDebug}
 					{portals}
 					{selectedPort}
 					showMenu={showPortalMenu}
@@ -272,7 +270,7 @@
 				aria-label="Close menu"
 			></button>
 			<div
-				class="fixed left-0 right-0 z-50 rounded-t-xl border-t border-white/10 bg-[#111111] pb-2 shadow-[0_-8px_32px_rgba(0,0,0,0.6)]"
+				class="fixed right-0 left-0 z-50 rounded-t-xl border-t border-white/10 bg-[#111111] pb-2 shadow-[0_-8px_32px_rgba(0,0,0,0.6)]"
 				style="bottom: calc(3rem + env(safe-area-inset-bottom));"
 			>
 				<div class="flex items-center justify-between px-4 py-3">
