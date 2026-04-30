@@ -18,6 +18,15 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<meta property="og:title" content="BrowserCode" />
+	<meta
+		property="og:description"
+		content="A full Linux development environment running entirely in your browser."
+	/>
+	<meta property="og:image" content="/og.webp" />
+	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:image" content="/og.webp" />
 	<script
 		defer
 		data-domain="browsercode.io"
