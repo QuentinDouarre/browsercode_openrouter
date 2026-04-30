@@ -35,12 +35,6 @@ export async function bootCLI(onPortalUpdate?: (update: PortalUpdate) => void) {
 	await pod.createDirectory(projectPath);
 	await copyFile(pod, 'project/package.json', homePath);
 
-	// await pod.run('npm', ['install', '--ignore-scripts'], {
-	// 	echo: true,
-	// 	terminal,
-	// 	cwd: projectPath
-	// });
-
 	await pod.run('npm', ['run', 'gemini'], {
 		echo: true,
 		env: ['COLORTERM=truecolor'],

@@ -82,12 +82,12 @@
 	<div class="flex flex-col items-center justify-center px-1.5 py-2 gap-0.5">
 		<div class="relative">
 			<a
-				href="https://browserpod.io/docs/overview"
+				href="https://github.com/leaningtech/browsercode"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65"
 			>
-				<Icon icon="mingcute:book-2-line" width="20" height="20" />
+				<Icon icon="simple-icons:github" width="20" height="20" />
 
 				<span
 					class="pointer-events-none absolute left-full z-50 ml-3 flex items-center opacity-0 transition-opacity duration-100 group-hover:opacity-100"
@@ -96,7 +96,28 @@
 					<span
 						class="-ml-px rounded-md border border-white/8 bg-zinc-900 px-2.5 py-1.5 text-[11.5px] leading-none font-medium whitespace-nowrap text-white/80 shadow-lg shadow-black/40"
 					>
-						Documentation
+						GitHub
+					</span>
+				</span>
+			</a>
+		</div>
+		<div class="relative">
+			<a
+				href="https://discord.gg/leaningtech"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65"
+			>
+				<Icon icon="simple-icons:discord" width="20" height="20" />
+
+				<span
+					class="pointer-events-none absolute left-full z-50 ml-3 flex items-center opacity-0 transition-opacity duration-100 group-hover:opacity-100"
+				>
+					<span class="h-1.5 w-1.5 rotate-45 border-b border-l border-white/8 bg-zinc-900"></span>
+					<span
+						class="-ml-px rounded-md border border-white/8 bg-zinc-900 px-2.5 py-1.5 text-[11.5px] leading-none font-medium whitespace-nowrap text-white/80 shadow-lg shadow-black/40"
+					>
+						Discord
 					</span>
 				</span>
 			</a>
