@@ -7,8 +7,7 @@
 
 	let currentStep = 1;
 	const totalSteps = 6;
-	let showModal = false;
-	$: showModal = stepperState.open;
+
 	let highlightedAgent: 'claude' | 'codex' | 'opencode' = 'claude';
 	let agentCycleTimer: ReturnType<typeof setInterval> | null = null;
 	let copied = false;
@@ -126,7 +125,7 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		if (!showModal) return;
+		if (!stepperState.open) return;
 		if (event.key === 'Escape') {
 			event.preventDefault();
 			finish();
@@ -147,7 +146,7 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-{#if showModal}
+{#if stepperState.open}
 	<!-- Backdrop. On step 3 we leave the sidebar uncovered so the CLI
 	     buttons remain visible and visually "highlighted" by the surrounding dim.
 	     On step 2 we leave the sidebar uncovered so the GitHub button is visible.
