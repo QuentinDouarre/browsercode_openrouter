@@ -3,10 +3,11 @@
 	import Icon from '@iconify/svelte';
 	import favicon from '$lib/assets/favicon.svg';
 	import opencodeLogoSrc from '$lib/assets/opencode-logo.svg';
+	import { stepperState } from '$lib/stores/stepper.svelte';
 
 	let currentStep = 1;
 	const totalSteps = 6;
-	let showModal = false;
+
 	let highlightedAgent: 'claude' | 'codex' | 'opencode' = 'claude';
 	let agentCycleTimer: ReturnType<typeof setInterval> | null = null;
 	let copied = false;
@@ -60,7 +61,7 @@
 	onMount(() => {
 		const isFirstTime = !localStorage.getItem('hasVisited');
 		if (isFirstTime) {
-			showModal = true;
+			stepperState.open = true;
 			localStorage.setItem('hasVisited', 'true');
 		}
 	});
@@ -113,7 +114,7 @@
 
 	function finish() {
 		stopAgentCycle();
-		showModal = false;
+		stepperState.open = false;
 		dispatch('close');
 	}
 
@@ -124,7 +125,7 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		if (!showModal) return;
+		if (!stepperState.open) return;
 		if (event.key === 'Escape') {
 			event.preventDefault();
 			finish();
@@ -145,7 +146,7 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-{#if showModal}
+{#if stepperState.open}
 	<!-- Backdrop. On step 3 we leave the sidebar uncovered so the CLI
 	     buttons remain visible and visually "highlighted" by the surrounding dim.
 	     On step 2 we leave the sidebar uncovered so the GitHub button is visible.
@@ -225,7 +226,7 @@
 					>
 						{#if agents[highlightedAgent].useIcon}
 							<Icon
-								icon={agents[highlightedAgent].icon as string}
+								icon={String(agents[highlightedAgent].icon)}
 								width="22"
 								height="22"
 								class="text-zinc-200 transition-colors duration-300"

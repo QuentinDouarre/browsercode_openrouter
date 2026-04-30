@@ -125,7 +125,7 @@
 		<div class="relative">
 			<button
 				onclick={() => (stepperState.open = true)}
-				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65"
+				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65 cursor-pointer"
 			>
 				<Icon icon="mingcute:question-line" width="20" height="20" />
 
