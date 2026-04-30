@@ -1,5 +1,3 @@
-import process from 'node:process';
-
 type PortalUpdate = { port: number; url: string | null; active: boolean };
 
 export async function bootCLI(onPortalUpdate?: (update: PortalUpdate) => void) {
@@ -7,7 +5,7 @@ export async function bootCLI(onPortalUpdate?: (update: PortalUpdate) => void) {
 
 	const consoleElement = document.querySelector('#console') as HTMLElement;
 	const pod = await BrowserPod.boot({
-		apiKey: process.env.API_KEY as string,
+		apiKey: import.meta.env.VITE_API_KEY as string,
 		userImage: 'wss://disks.browserpod.io/gemini_20260429_2.ext2'
 	});
 	const terminal = await pod.createDefaultTerminal(consoleElement);
