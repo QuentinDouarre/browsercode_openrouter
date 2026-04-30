@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 type PortalUpdate = { port: number; url: string | null; active: boolean };
 
 export async function bootCLI(onPortalUpdate?: (update: PortalUpdate) => void) {
