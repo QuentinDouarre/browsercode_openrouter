@@ -3,10 +3,12 @@
 	import Icon from '@iconify/svelte';
 	import favicon from '$lib/assets/favicon.svg';
 	import opencodeLogoSrc from '$lib/assets/opencode-logo.svg';
+	import { stepperState } from '$lib/stores/stepper.svelte';
 
 	let currentStep = 1;
 	const totalSteps = 6;
 	let showModal = false;
+	$: showModal = stepperState.open;
 	let highlightedAgent: 'claude' | 'codex' | 'opencode' = 'claude';
 	let agentCycleTimer: ReturnType<typeof setInterval> | null = null;
 	let copied = false;
@@ -60,7 +62,7 @@
 	onMount(() => {
 		const isFirstTime = !localStorage.getItem('hasVisited');
 		if (isFirstTime) {
-			showModal = true;
+			stepperState.open = true;
 			localStorage.setItem('hasVisited', 'true');
 		}
 	});
@@ -113,7 +115,7 @@
 
 	function finish() {
 		stopAgentCycle();
-		showModal = false;
+		stepperState.open = false;
 		dispatch('close');
 	}
 
@@ -225,7 +227,7 @@
 					>
 						{#if agents[highlightedAgent].useIcon}
 							<Icon
-								icon={agents[highlightedAgent].icon as string}
+								icon={String(agents[highlightedAgent].icon)}
 								width="22"
 								height="22"
 								class="text-zinc-200 transition-colors duration-300"
