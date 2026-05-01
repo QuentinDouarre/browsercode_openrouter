@@ -13,8 +13,7 @@
 	let copied = false;
 	let copyTimer: ReturnType<typeof setTimeout> | null = null;
 
-	const firstPrompt =
-		"Please create and preview a 'hello world' project in Express.js";
+	const firstPrompt = 'Build a basic Express.js demo in a new folder and preview it.';
 
 	const dispatch = createEventDispatcher();
 
