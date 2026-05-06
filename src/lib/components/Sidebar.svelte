@@ -4,6 +4,7 @@
 	import opencodeLogoSrc from '$lib/assets/opencode-logo.svg';
 	import Icon from '@iconify/svelte';
 	import { stepperState } from '$lib/stores/stepper.svelte';
+	import { toolItems } from '$lib/config/tools';
 
 	interface Props {
 		activePanel?: string;
@@ -11,13 +12,6 @@
 	}
 
 	let { activePanel = '', onPanelToggle }: Props = $props();
-
-	const navItems: { id: string; icon: string | null; label: string; disabled: boolean }[] = [
-		{ id: 'gemini', icon: 'simple-icons:googlegemini', label: 'Gemini', disabled: false },
-		{ id: 'claude', icon: 'mingcute:claude-line', label: 'Claude Code', disabled: true },
-		{ id: 'codex', icon: 'hugeicons:chat-gpt', label: 'Codex CLI', disabled: true },
-		{ id: 'opencode', icon: null, label: 'OpenCode', disabled: true }
-	];
 </script>
 
 {#snippet navButton(item: { id: string; icon: string | null; label: string; disabled: boolean })}
@@ -34,9 +28,9 @@
 			disabled={item.disabled}
 		>
 			{#if item.icon}
-				<Icon icon={item.icon} width="20" height="20" />
+				<Icon icon={item.icon} width="26" height="26" />
 			{:else}
-				<img src={opencodeLogoSrc} alt={item.label} class="h-5 w-5 opacity-15" />
+				<img src={opencodeLogoSrc} alt={item.label} class="h-[26px] w-[26px] opacity-15" />
 			{/if}
 
 			<span
@@ -65,14 +59,14 @@
 			title="BrowserCode"
 			class="rounded-md p-1 transition-opacity duration-150 hover:opacity-80"
 		>
-			<img src={favicon} alt="BrowserCode" class="h-6 w-6" />
+			<img src={favicon} alt="BrowserCode" class="h-[31px] w-[31px]" />
 		</a>
 	</div>
 
 	<div class="mx-3 h-px bg-white/[0.05]"></div>
 
 	<nav class="flex flex-1 flex-col gap-0.5 px-1.5 pt-2">
-		{#each navItems as item (item.id)}
+		{#each toolItems as item (item.id)}
 			{@render navButton(item)}
 		{/each}
 	</nav>
@@ -87,7 +81,7 @@
 				rel="noopener noreferrer"
 				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65"
 			>
-				<Icon icon="simple-icons:github" width="20" height="20" />
+				<Icon icon="simple-icons:github" width="26" height="26" />
 
 				<span
 					class="pointer-events-none absolute left-full z-50 ml-3 flex items-center opacity-0 transition-opacity duration-100 group-hover:opacity-100"
@@ -108,7 +102,7 @@
 				rel="noopener noreferrer"
 				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65"
 			>
-				<Icon icon="simple-icons:discord" width="20" height="20" />
+				<Icon icon="simple-icons:discord" width="26" height="26" />
 
 				<span
 					class="pointer-events-none absolute left-full z-50 ml-3 flex items-center opacity-0 transition-opacity duration-100 group-hover:opacity-100"
@@ -127,7 +121,7 @@
 				onclick={() => (stepperState.open = true)}
 				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65 cursor-pointer"
 			>
-				<Icon icon="mingcute:question-line" width="20" height="20" />
+				<Icon icon="mingcute:question-line" width="26" height="26" />
 
 				<span
 					class="pointer-events-none absolute left-full z-50 ml-3 flex items-center opacity-0 transition-opacity duration-100 group-hover:opacity-100"

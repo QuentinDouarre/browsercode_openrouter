@@ -4,25 +4,35 @@
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import UtilityBar from '$lib/components/UtilityBar.svelte';
 	import Stepper from '$lib/components/Stepper.svelte';
+	import { page } from '$app/stores';
+	import { toolItems } from '$lib/config/tools';
 
 	let { children } = $props();
 
-	let activePanel = $state('gemini');
+	const validToolIds = new Set(toolItems.filter((t) => !t.disabled).map((t) => t.id));
+	const defaultTool = toolItems.find((t) => !t.disabled)?.id ?? 'claude';
+
+	let activePanel = $derived(
+		validToolIds.has($page.params.tool as string) ? $page.params.tool : defaultTool
+	);
+
+	let pageTitle = $derived.by(() => {
+		const tool = toolItems.find((t) => t.id === activePanel);
+		return tool ? `${tool.label} — BrowserCode` : 'BrowserCode';
+	});
 
 	function handlePanelToggle(panel: string) {
-		if (panel !== 'gemini') {
-			activePanel = activePanel === panel ? 'gemini' : panel;
+		if (validToolIds.has(panel)) {
+			window.location.href = `/${panel}`;
 		}
 	}
 </script>
 
 <svelte:head>
+	<title>{pageTitle}</title>
 	<link rel="icon" href={favicon} />
 	<meta property="og:title" content="BrowserCode" />
-	<meta
-		property="og:description"
-		content="Run AI coding CLIs in-browser."
-	/>
+	<meta property="og:description" content="Run AI coding CLIs in-browser." />
 	<meta property="og:image" content="https://browsercode.io/og.png" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://browsercode.io" />
@@ -39,7 +49,7 @@
 	<Stepper />
 	<Sidebar {activePanel} onPanelToggle={handlePanelToggle} />
 
-	<!-- GitHub Fork Ribbon -->
+	<!-- GitHub Ribbon -->
 	<div
 		class="pointer-events-none fixed top-0 right-0 z-40 hidden overflow-hidden md:block"
 		style="width: 150px; height: 175px;"

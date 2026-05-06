@@ -5,8 +5,10 @@
 	import opencodeLogoSrc from '$lib/assets/opencode-logo.svg';
 
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { bootCLI } from '$lib/utils/main';
 	import { stepperState } from '$lib/stores/stepper.svelte';
+	import { toolItems } from '$lib/config/tools';
 
 	type PortalItem = { port: number; url: string };
 	type PortalUpdate = { port: number; url: string | null; active: boolean };
@@ -56,21 +58,25 @@
 	let isMobile = false;
 	let activeMobileView: 'terminal' | 'preview' = 'terminal';
 	let showToolMenu = false;
-	let activeTool = 'gemini';
 
-	const toolItems = [
-		{ id: 'gemini', icon: 'simple-icons:googlegemini', label: 'Gemini', disabled: false },
-		{ id: 'claude', icon: 'mingcute:claude-line', label: 'Claude Code', disabled: true },
-		{ id: 'codex', icon: 'hugeicons:chat-gpt', label: 'Codex CLI', disabled: true },
-		{ id: 'opencode', icon: null, label: 'OpenCode', disabled: true }
-	];
+	const validToolIds = new Set(toolItems.filter((t) => !t.disabled).map((t) => t.id));
+	const defaultTool = toolItems.find((t) => !t.disabled)?.id ?? 'claude';
+
+	function getActiveTool() {
+		const tool = $page.params.tool;
+		return validToolIds.has(tool) ? tool : defaultTool;
+	}
+
+	$: activeTool = getActiveTool();
 
 	function toggleToolMenu() {
 		showToolMenu = !showToolMenu;
 	}
 
 	function selectTool(id: string) {
-		activeTool = id;
+		if (validToolIds.has(id)) {
+			window.location.href = `/${id}`;
+		}
 		showToolMenu = false;
 	}
 
@@ -188,7 +194,7 @@
 			}
 
 			applyPortalUpdate(update);
-		});
+		}, getActiveTool());
 
 		return () => {
 			mql.removeEventListener('change', updateIsMobile);
@@ -271,7 +277,7 @@
 			></button>
 			<div
 				class="fixed right-0 left-0 z-50 rounded-t-xl border-t border-white/10 bg-[#111111] pb-2 shadow-[0_-8px_32px_rgba(0,0,0,0.6)]"
-				style="bottom: calc(3rem + env(safe-area-inset-bottom));"
+				style="bottom: calc(48px + env(safe-area-inset-bottom));"
 			>
 				<div class="flex items-center justify-between px-4 py-3">
 					<span class="text-[13px] font-semibold text-white/60">CLI Tool</span>
@@ -313,11 +319,11 @@
 
 		<nav
 			class="flex shrink-0 items-stretch border-t border-white/6 bg-[#111111]"
-			style="height: calc(3rem + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom);"
+			style="height: calc(48px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom);"
 		>
 			<button
 				onclick={toggleToolMenu}
-				class="flex w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 border-none text-[11px] font-medium transition-colors {showToolMenu
+				class="flex w-25 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 border-none text-[11px] font-medium transition-colors {showToolMenu
 					? 'bg-white/4 text-white/90'
 					: 'bg-transparent text-white/30 hover:text-white/60'}"
 			>
@@ -348,7 +354,7 @@
 			{/if}
 			<button
 				onclick={() => (stepperState.open = true)}
-				class="flex w-12 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 border-none text-[11px] font-medium text-white/30 transition-colors hover:text-white/60"
+				class="flex w-25 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 border-none text-[11px] font-medium text-white/30 transition-colors hover:text-white/60"
 			>
 				<Icon icon="mingcute:question-line" width="20" height="20" />
 				<span>Help</span>

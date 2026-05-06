@@ -1,13 +1,23 @@
+import { cliConfigs, toolItems } from '$lib/config/tools';
+
 type PortalUpdate = { port: number; url: string | null; active: boolean };
 
-export async function bootCLI(onPortalUpdate?: (update: PortalUpdate) => void) {
+type Pod = Parameters<typeof copyFile>[0];
+
+export async function bootCLI(
+	onPortalUpdate?: (update: PortalUpdate) => void,
+	tool: keyof typeof cliConfigs = 'gemini'
+) {
 	const { BrowserPod } = await import('@leaningtech/browserpod');
+
+	const config = cliConfigs[tool] ?? cliConfigs.gemini;
+	const toolLabel = toolItems.find((item) => item.id === tool)?.label ?? tool;
 
 	const consoleElement = document.querySelector('#console') as HTMLElement;
 	const pod = await BrowserPod.boot({
 		apiKey: import.meta.env.VITE_API_KEY as string,
-		userImage: 'wss://disks.browserpod.io/gemini_20260430_2.ext2',
-		storageKey: 'browsercode'
+		userImage: config.userImage,
+		storageKey: config.storageKey
 	});
 	const terminal = await pod.createDefaultTerminal(consoleElement);
 
@@ -30,17 +40,24 @@ export async function bootCLI(onPortalUpdate?: (update: PortalUpdate) => void) {
 		}
 	});
 
-	const homePath = '/home/user';
-	const projectPath = `${homePath}/project`;
+	if (config.openCallback) {
+		pod.onOpen(config.openCallback);
+	}
 
-	await pod.createDirectory(projectPath);
-	await copyFile(pod, 'project/package.json', homePath);
+	const homePath = '/home/user/project';
+	await pod.createDirectory(homePath, { recursive: true });
 
-	await pod.run('npm', ['run', 'gemini'], {
-		echo: true,
+	if (config.projectFile) {
+		const filename = config.projectFile.split('/').pop()!;
+		await copyFile(pod, config.projectFile, homePath, filename);
+	}
+
+	terminal.write(`Starting ${toolLabel}...\n`);
+
+	await pod.run(config.command, config.args, {
 		env: ['COLORTERM=truecolor'],
 		terminal,
-		cwd: projectPath
+		cwd: homePath
 	});
 }
 
@@ -55,11 +72,13 @@ export async function copyFile(
 		}>;
 	},
 	path: string,
-	prefix: string
+	prefix: string,
+	destFilename?: string
 ) {
 	const normalizedPrefix = prefix.endsWith('/') ? prefix.slice(0, -1) : prefix;
+	const dest = destFilename ? `${normalizedPrefix}/${destFilename}` : `${normalizedPrefix}/${path}`;
 
-	const file = await pod.createFile(`${normalizedPrefix}/${path}`, 'binary');
+	const file = await pod.createFile(dest, 'binary');
 	const resp = await fetch(path);
 
 	if (!resp.ok) {

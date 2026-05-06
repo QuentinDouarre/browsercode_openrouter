@@ -6,9 +6,9 @@
 	import { stepperState } from '$lib/stores/stepper.svelte';
 
 	let currentStep = 1;
-	const totalSteps = 6;
+	const totalSteps = 7;
 
-	let highlightedAgent: 'claude' | 'codex' | 'opencode' = 'claude';
+	let highlightedAgent: 'codex' | 'opencode' = 'codex';
 	let agentCycleTimer: ReturnType<typeof setInterval> | null = null;
 	let copied = false;
 	let copyTimer: ReturnType<typeof setTimeout> | null = null;
@@ -18,12 +18,6 @@
 	const dispatch = createEventDispatcher();
 
 	const agents = {
-		claude: {
-			label: 'Claude Code',
-			icon: 'mingcute:claude-line',
-			helper: 'Claude Code — coming soon',
-			useIcon: true
-		},
 		codex: {
 			label: 'Codex CLI',
 			icon: 'hugeicons:chat-gpt',
@@ -38,14 +32,10 @@
 		}
 	} as const;
 
-	// Sidebar geometry: favicon header (py-3.5 ~2.875rem) + divider + nav pt-2 + nav buttons.
-	// Each nav button = p-2.5 (20px) + 20px icon = 40px, plus gap-0.5 (2px).
-	// Button 1 (Gemini) center ≈ 46 + 1 + 20 + 2 = ~47px from top of nav → ~46 + 1 + 20 = ~93px total
-	// Button 2 (Claude) center ≈ previous + 40 + 2 = ~135px
-	// Button 3 (Codex) center ≈ ~177px
-	// Button 4 (OpenCode) center ≈ ~219px
+	// Sidebar order: [Claude, Gemini, Codex, OpenCode]. Each nav button is 40px tall with 2px gap.
+	// Nav starts ~93px from viewport top (favicon header + divider + pt-2). Button N center ≈ 93 + (N-1)*42.
+	// Codex is button 3 → ~177px; OpenCode is button 4 → ~219px.
 	const agentButtonOffsets = {
-		claude: 135,
 		codex: 177,
 		opencode: 219
 	};
@@ -70,7 +60,7 @@
 		if (copyTimer) clearTimeout(copyTimer);
 	});
 
-	const agentOrder: Array<'claude' | 'codex' | 'opencode'> = ['claude', 'codex', 'opencode'];
+	const agentOrder: Array<'codex' | 'opencode'> = ['codex', 'opencode'];
 
 	function startAgentCycle() {
 		if (agentCycleTimer) return;
@@ -90,8 +80,8 @@
 	function nextStep() {
 		if (currentStep < totalSteps) {
 			currentStep += 1;
-			if (currentStep === 3) {
-				highlightedAgent = 'claude';
+			if (currentStep === 4) {
+				highlightedAgent = 'codex';
 				startAgentCycle();
 			} else {
 				stopAgentCycle();
@@ -102,8 +92,8 @@
 	function prevStep() {
 		if (currentStep > 1) {
 			currentStep -= 1;
-			if (currentStep === 3) {
-				highlightedAgent = 'claude';
+			if (currentStep === 4) {
+				highlightedAgent = 'codex';
 				startAgentCycle();
 			} else {
 				stopAgentCycle();
@@ -146,13 +136,13 @@
 <svelte:window on:keydown={handleKeydown} />
 
 {#if stepperState.open}
-	<!-- Backdrop. On step 3 we leave the sidebar uncovered so the CLI
+	<!-- Backdrop. On step 4 we leave the sidebar uncovered so the CLI
 	     buttons remain visible and visually "highlighted" by the surrounding dim.
-	     On step 2 we leave the sidebar uncovered so the GitHub button is visible.
+	     On step 3 we leave the sidebar uncovered so the GitHub button is visible.
 	     Escape-to-close is handled by the window listener above. -->
 	<div
 		class="fixed inset-y-0 right-0 z-50 flex items-center justify-center bg-black/60 transition-[left] duration-500 ease-out"
-		style="left: {currentStep === 2 || currentStep === 3 ? 'var(--width-sidebar)' : '0'};"
+		style="left: {currentStep === 3 || currentStep === 4 ? 'var(--width-sidebar)' : '0'};"
 		role="presentation"
 		on:click={handleBackdropClick}
 	>
@@ -166,7 +156,7 @@
 			<div
 				class="flex items-center justify-between border-b border-white/10 px-5 py-3 text-xs text-zinc-500"
 			>
-				<span class="font-medium tracking-wide text-zinc-400 uppercase">BrowserCode (Preview) </span>
+				<span class="font-medium tracking-wide text-zinc-400 uppercase">BrowserCode</span>
 				<span class="font-mono text-zinc-600">{currentStep} / {totalSteps}</span>
 			</div>
 
@@ -175,12 +165,41 @@
 					<div class="mb-5 flex justify-center">
 						<img src={favicon} alt="BrowserCode" class="h-14 w-14" />
 					</div>
-					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">BrowserCode (Preview)</h1>
+					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">BrowserCode Preview</h1>
 					<p class="text-sm leading-relaxed text-zinc-400">
-						BrowserCode runs Gemini CLI in the browser unmodified. It runs via BrowserPod, an API that provides
-						Wasm-based runtimes for AI agents and code. It runs in-browser without any cloud compute.
+						BrowserCode runs Claude Code and Gemini CLI, and other AI coding agents in the browser, unmodified.
 					</p>
 				{:else if currentStep === 2}
+					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">Powered by BrowserPod</h1>
+					<p class="text-sm leading-relaxed text-zinc-400">
+						BrowserCode is built on
+						<a
+							href="https://browserpod.io"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="font-medium text-zinc-100 transition-colors duration-300 hover:text-white"
+						>BrowserPod</a>, a browser-based sandbox that runs AI agents, code and development tools in the browser, without cloud compute.
+					</p>
+
+					<a
+						href="https://browserpod.io"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="mt-6 flex items-center gap-3 rounded-lg border border-white/5 bg-black/30 px-4 py-3 transition-colors duration-150 hover:border-white/10 hover:bg-black/40"
+					>
+						<Icon
+							icon="mingcute:cube-3d-line"
+							width="22"
+							height="22"
+							class="text-zinc-200"
+						/>
+						<div class="flex-1 text-sm text-zinc-300">
+							<span class="font-medium">BrowserPod</span>
+							<span class="ml-2 text-zinc-500">Learn more</span>
+						</div>
+						<Icon icon="mingcute:arrow-right-up-line" width="16" height="16" class="text-zinc-500" />
+					</a>
+				{:else if currentStep === 3}
 					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">Breaking BrowserCode</h1>
 					<p class="text-sm leading-relaxed text-zinc-400">
 						This is our first beta, so please bend, stretch and break it. When you find issues,
@@ -195,17 +214,12 @@
 							GitHub
 						</a>
 					</p>
-				{:else if currentStep === 3}
+				{:else if currentStep === 4}
 					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">
 						More AI coding CLIs coming soon
 					</h1>
 					<p class="text-sm leading-relaxed text-zinc-400">
-						BrowserCode boots with Gemini, but support for
-						<span
-							class="font-medium transition-colors duration-300"
-							class:text-zinc-100={highlightedAgent === 'claude'}
-							class:text-zinc-500={highlightedAgent !== 'claude'}>Claude Code</span
-						>,
+						BrowserCode boots with Claude Code, with Gemini CLI also available now. Support for
 						<span
 							class="font-medium transition-colors duration-300"
 							class:text-zinc-100={highlightedAgent === 'codex'}
@@ -217,7 +231,7 @@
 							class:text-zinc-100={highlightedAgent === 'opencode'}
 							class:text-zinc-500={highlightedAgent !== 'opencode'}>OpenCode</span
 						>
-						are coming soon.
+						is coming soon.
 					</p>
 
 					<div
@@ -240,11 +254,6 @@
 						<div class="flex gap-1">
 							<span
 								class="h-1.5 w-1.5 rounded-full transition-colors duration-300"
-								class:bg-zinc-200={highlightedAgent === 'claude'}
-								class:bg-zinc-700={highlightedAgent !== 'claude'}
-							></span>
-							<span
-								class="h-1.5 w-1.5 rounded-full transition-colors duration-300"
 								class:bg-zinc-200={highlightedAgent === 'codex'}
 								class:bg-zinc-700={highlightedAgent !== 'codex'}
 							></span>
@@ -255,10 +264,10 @@
 							></span>
 						</div>
 					</div>
-				{:else if currentStep === 4}
-					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">Contribute to BrowserCode</h1>
+				{:else if currentStep === 5}
+					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">Give us a star on GitHub</h1>
 					<p class="text-sm leading-relaxed text-zinc-400">
-						BrowserCode is open source. You can fork the project on
+						BrowserCode is free and open source software. Do anything you like with it! Change it, customize it, embed it on your application. Find us on
 						<a
 							href="https://github.com/leaningtech/browsercode"
 							target="_blank"
@@ -269,12 +278,12 @@
 							GitHub
 						</a>
 					</p>
-				{:else if currentStep === 5}
+				{:else if currentStep === 6}
 					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">Get started</h1>
 					<p class="text-sm leading-relaxed text-zinc-400">
-						BrowserCode will boot Gemini CLI now. On boot, Gemini may hang silently for up to 30 seconds. This is normal behavior for Gemini CLI in any environment. 
+						BrowserCode will boot now. You can switch AI coding agent at any time from the sidebar.
 					</p>
-				{:else if currentStep === 6}
+				{:else if currentStep === 7}
 					<h1 id="stepper-title" class="mb-3 text-3xl font-bold text-zinc-100">Try this</h1>
 					<p class="text-sm leading-relaxed text-zinc-400">
 						Use this as your first prompt for BrowserCode:
@@ -357,9 +366,9 @@
 		</div>
 	</div>
 
-	<!-- Step 3: helper tooltip that jumps between the Claude, Codex, and OpenCode sidebar buttons.
+	<!-- Step 4: helper tooltip that jumps between the Claude, Codex, and OpenCode sidebar buttons.
 	     Sits above the backdrop (z-50) so it's visible, positioned over the sidebar strip. -->
-	{#if currentStep === 3}
+	{#if currentStep === 4}
 		<div
 			class="pointer-events-none fixed z-[60] ml-3 flex items-center transition-[top] duration-500 ease-out"
 			style="left: var(--width-sidebar); top: {agentButtonOffsets[highlightedAgent]}px; transform: translateY(-50%);"
@@ -373,8 +382,8 @@
 		</div>
 	{/if}
 
-	<!-- Step 2: helper tooltip pointing to the GitHub icon in the sidebar bottom section. -->
-	{#if currentStep === 2}
+	<!-- Step 3: helper tooltip pointing to the GitHub icon in the sidebar bottom section. -->
+	{#if currentStep === 3}
 		<div
 			class="pointer-events-none fixed z-[60] ml-3 flex items-center"
 			style="left: var(--width-sidebar); bottom: {githubButtonBottomOffset}px; transform: translateY(50%);"
@@ -389,8 +398,8 @@
 		</div>
 	{/if}
 
-	<!-- Step 4: helper tooltip pointing to the GitHub fork ribbon in the top-right corner. -->
-	{#if currentStep === 4}
+	<!-- Step 5: helper tooltip pointing to the GitHub fork ribbon in the top-right corner. -->
+	{#if currentStep === 5}
 		<div
 			class="pointer-events-none fixed z-[60] flex items-center"
 			style="top: 24px; right: 160px; transform: translateY(-50%);"
@@ -399,7 +408,7 @@
 				class="flex items-center gap-2 rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium whitespace-nowrap text-black shadow-lg"
 			>
 				<Icon icon="simple-icons:github" width="12" height="12" />
-				Fork on GitHub
+				Star us on GitHub!
 			</span>
 			<span class="h-2 w-2 rotate-45 bg-zinc-100"></span>
 		</div>
