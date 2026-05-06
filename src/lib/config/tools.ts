@@ -28,7 +28,7 @@ export const cliConfigs: Record<string, CLIConfig> = {
 		userImage: 'wss://disks.browserpod.io/claude_20260506.ext2',
 		storageKey: 'claude_20260506',
 		command: 'node',
-		args: ['claude-extracted/src/entrypoints/cli.js'],
+		args: ['/home/user/claude-extracted/src/entrypoints/cli.js'],
 		projectFile: 'project/claude/CLAUDE.md',
 		openCallback: (urlOrPath: string) => {
 			if (

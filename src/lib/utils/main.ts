@@ -44,7 +44,8 @@ export async function bootCLI(
 		pod.onOpen(config.openCallback);
 	}
 
-	const homePath = '/home/user';
+	const homePath = '/home/user/project';
+	await pod.createDirectory(homePath, { recursive: true });
 
 	if (config.projectFile) {
 		const filename = config.projectFile.split('/').pop()!;
@@ -56,7 +57,7 @@ export async function bootCLI(
 	await pod.run(config.command, config.args, {
 		env: ['COLORTERM=truecolor'],
 		terminal,
-		cwd: `${homePath}`
+		cwd: homePath
 	});
 }
 
