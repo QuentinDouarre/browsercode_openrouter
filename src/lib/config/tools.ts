@@ -29,10 +29,16 @@ export const cliConfigs: Record<string, CLIConfig> = {
 		command: 'node',
 		args: ['claude-extracted/src/entrypoints/cli.js'],
 		openCallback: (urlOrPath: string) => {
-			if(urlOrPath.startsWith("https://claude.com/cai/oauth/authorize") || urlOrPath.startsWith("https://platform.claude.com/oauth/authorize")) {
+			if (
+				urlOrPath.startsWith('https://claude.com/cai/oauth/authorize') ||
+				urlOrPath.startsWith('https://platform.claude.com/oauth/authorize')
+			) {
 				// Rewrite the localhost callback to the code-based exchange
-				const fixedUrl = urlOrPath.replace("http%3A%2F%2Flocalhost%3A0", "https%3A%2F%2Fplatform.claude.com%2Foauth%2Fcode");
-				window.open(fixedUrl, "_blank");
+				const fixedUrl = urlOrPath.replace(
+					'http%3A%2F%2Flocalhost%3A0',
+					'https%3A%2F%2Fplatform.claude.com%2Foauth%2Fcode'
+				);
+				window.open(fixedUrl, '_blank');
 			}
 		}
 	},

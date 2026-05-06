@@ -10,7 +10,7 @@
 >
 	<span class="flex items-center gap-2 text-[11.5px]">
 		<img src={favicon} alt="BrowserCode logo" class="h-4 w-4" />
-		<span class="text-white/40">BrowserCode v0.1.0</span>
+		<span class="text-white/40">BrowserCode v0.5.0</span>
 		<span class="rounded bg-amber-500/15 px-1.5 py-0.5 font-mono text-[10px] text-amber-400/80"
 			>Preview</span
 		>
