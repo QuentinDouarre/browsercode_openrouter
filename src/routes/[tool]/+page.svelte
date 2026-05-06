@@ -5,6 +5,7 @@
 	import opencodeLogoSrc from '$lib/assets/opencode-logo.svg';
 
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { bootCLI } from '$lib/utils/main';
 	import { stepperState } from '$lib/stores/stepper.svelte';
 	import { toolItems } from '$lib/config/tools';
@@ -57,13 +58,13 @@
 	let isMobile = false;
 	let activeMobileView: 'terminal' | 'preview' = 'terminal';
 	let showToolMenu = false;
-	let activeTool = 'claude';
 
-	function getToolFromURL(): 'claude' | 'gemini' {
-		const params = new URLSearchParams(window.location.search);
-		const tool = params.get('');
+	function getActiveTool(): 'claude' | 'gemini' {
+		const tool = $page.params.tool;
 		return tool === 'gemini' ? 'gemini' : 'claude';
 	}
+
+	$: activeTool = getActiveTool();
 
 	function toggleToolMenu() {
 		showToolMenu = !showToolMenu;
@@ -71,7 +72,7 @@
 
 	function selectTool(id: string) {
 		if (id === 'claude' || id === 'gemini') {
-			window.location.href = `?=${id}`;
+			window.location.href = `/${id}`;
 		}
 		showToolMenu = false;
 	}
@@ -175,8 +176,7 @@
 		const mql = window.matchMedia('(max-width: 768px)');
 		mql.addEventListener('change', updateIsMobile);
 
-		const tool = getToolFromURL();
-		activeTool = tool;
+		const tool = getActiveTool();
 
 		bootCLI((update: PortalUpdate | string) => {
 			if (typeof update === 'string') {
