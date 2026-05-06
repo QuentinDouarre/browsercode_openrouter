@@ -19,6 +19,7 @@ export type CLIConfig = {
 	storageKey: string;
 	command: string;
 	args: string[];
+	projectFile?: string;
 	openCallback?: (urlOrPath: string) => void;
 };
 
@@ -28,6 +29,7 @@ export const cliConfigs: Record<string, CLIConfig> = {
 		storageKey: 'claude_20260506',
 		command: 'node',
 		args: ['claude-extracted/src/entrypoints/cli.js'],
+		projectFile: 'project/claude/CLAUDE.md',
 		openCallback: (urlOrPath: string) => {
 			if (
 				urlOrPath.startsWith('https://claude.com/cai/oauth/authorize') ||
@@ -46,6 +48,7 @@ export const cliConfigs: Record<string, CLIConfig> = {
 		userImage: 'wss://disks.browserpod.io/gemini_20260430_2.ext2',
 		storageKey: 'gemini_20260430_2',
 		command: 'npm',
-		args: ['run', 'gemini']
+		args: ['run', 'gemini'],
+		projectFile: 'project/gemini/GEMINI.md'
 	}
 };

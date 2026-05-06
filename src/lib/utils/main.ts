@@ -2,9 +2,7 @@ import { cliConfigs, toolItems } from '$lib/config/tools';
 
 type PortalUpdate = { port: number; url: string | null; active: boolean };
 
-type Pod = Parameters<typeof copyFile>[0] & {
-	createDirectory: (path: string) => Promise<void>;
-};
+type Pod = Parameters<typeof copyFile>[0];
 
 export async function bootCLI(
 	onPortalUpdate?: (update: PortalUpdate) => void,
@@ -42,8 +40,15 @@ export async function bootCLI(
 		}
 	});
 
-	if(config.openCallback) {
+	if (config.openCallback) {
 		pod.onOpen(config.openCallback);
+	}
+
+	const homePath = '/home/user';
+
+	if (config.projectFile) {
+		const filename = config.projectFile.split('/').pop()!;
+		await copyFile(pod, config.projectFile, homePath, filename);
 	}
 
 	terminal.write(`Starting ${toolLabel}...\n`);
@@ -51,6 +56,35 @@ export async function bootCLI(
 	await pod.run(config.command, config.args, {
 		env: ['COLORTERM=truecolor'],
 		terminal,
-		cwd: '/home/user'
+		cwd: `${homePath}`
 	});
+}
+
+export async function copyFile(
+	pod: {
+		createFile: (
+			path: string,
+			mode: 'binary' | 'text'
+		) => Promise<{
+			write: (data: ArrayBuffer | string) => Promise<void>;
+			close: () => Promise<void>;
+		}>;
+	},
+	path: string,
+	prefix: string,
+	destFilename?: string
+) {
+	const normalizedPrefix = prefix.endsWith('/') ? prefix.slice(0, -1) : prefix;
+	const dest = destFilename ? `${normalizedPrefix}/${destFilename}` : `${normalizedPrefix}/${path}`;
+
+	const file = await pod.createFile(dest, 'binary');
+	const resp = await fetch(path);
+
+	if (!resp.ok) {
+		throw new Error(`Failed to fetch "${path}" (${resp.status} ${resp.statusText})`);
+	}
+
+	const buf = await resp.arrayBuffer();
+	await file.write(buf);
+	await file.close();
 }
