@@ -23,8 +23,8 @@ export type CLIConfig = {
 
 export const cliConfigs: Record<string, CLIConfig> = {
 	claude: {
-		userImage: 'wss://disks.browserpod.io/claude_20260428.ext2',
-		storageKey: 'claude_20260428',
+		userImage: 'wss://disks.browserpod.io/claude_20260506.ext2',
+		storageKey: 'claude_20260506',
 		command: 'npm',
 		args: ['run', 'claude']
 	},
