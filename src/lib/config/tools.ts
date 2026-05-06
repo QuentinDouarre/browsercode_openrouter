@@ -26,8 +26,8 @@ export const cliConfigs: Record<string, CLIConfig> = {
 	claude: {
 		userImage: 'wss://disks.browserpod.io/claude_20260506.ext2',
 		storageKey: 'claude_20260506',
-		command: 'npm',
-		args: ['run', 'claude'],
+		command: 'node',
+		args: ['claude-extracted/src/entrypoints/cli.js'],
 		openCallback: (urlOrPath: string) => {
 			if(urlOrPath.startsWith("https://claude.com/cai/oauth/authorize") || urlOrPath.startsWith("https://platform.claude.com/oauth/authorize")) {
 				// Rewrite the localhost callback to the code-based exchange

@@ -45,8 +45,9 @@ export async function bootCLI(
 		pod.onOpen(config.openCallback);
 	}
 
+	terminal.write(`Starting ${tool}...`);
+
 	await pod.run(config.command, config.args, {
-		echo: true,
 		env: ['COLORTERM=truecolor'],
 		terminal,
 		cwd: '/home/user'
