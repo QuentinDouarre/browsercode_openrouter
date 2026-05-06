@@ -16,6 +16,11 @@
 		validToolIds.has($page.params.tool as string) ? $page.params.tool : defaultTool
 	);
 
+	let pageTitle = $derived.by(() => {
+		const tool = toolItems.find((t) => t.id === activePanel);
+		return tool ? `${tool.label} — BrowserCode` : 'BrowserCode';
+	});
+
 	function handlePanelToggle(panel: string) {
 		if (validToolIds.has(panel)) {
 			window.location.href = `/${panel}`;
@@ -24,6 +29,7 @@
 </script>
 
 <svelte:head>
+	<title>{pageTitle}</title>
 	<link rel="icon" href={favicon} />
 	<meta property="og:title" content="BrowserCode" />
 	<meta property="og:description" content="Run AI coding CLIs in-browser." />

@@ -9,7 +9,7 @@ export type ToolItem = {
 
 export const toolItems: ToolItem[] = [
 	{ id: 'claude', icon: 'mingcute:claude-line', label: 'Claude Code', disabled: false },
-	{ id: 'gemini', icon: 'simple-icons:googlegemini', label: 'Gemini', disabled: false },
+	{ id: 'gemini', icon: 'simple-icons:googlegemini', label: 'Gemini CLI', disabled: false },
 	{ id: 'codex', icon: 'hugeicons:chat-gpt', label: 'Codex CLI', disabled: true },
 	{ id: 'opencode', icon: null, label: 'OpenCode', disabled: true }
 ];
