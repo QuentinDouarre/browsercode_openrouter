@@ -27,6 +27,12 @@
 - [Breaking BrowserCode](#breaking-browsercode)
 - [Roadmap](#roadmap)
 
+<div align="center">
+
+<img src="./static/readme/screenshot-hero.webp" alt="Claude Code running in BrowserCode, scaffolding an Express.js app with a live preview" width="100%" />
+
+</div>
+
 <h2 id="about">What is BrowserCode?</h2>
 
 BrowserCode is a browser runtime for AI coding CLIs. BrowserCode is a working example of [BrowserPod](https://browserpod.io/), it includes:
