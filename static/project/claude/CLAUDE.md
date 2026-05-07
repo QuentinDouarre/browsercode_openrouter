@@ -141,7 +141,7 @@ You **do not** have an arbitrary egress network. What you do have is the inverse
 - **Multiple ports → multiple Portals.** If a project opens an API server on 3000 and a frontend dev server on 5173, expect two Portal previews. Pick port numbers deliberately and avoid collisions.
 - **Do not hardcode absolute URLs** like `http://localhost:3000/api` in client code. Use relative paths (`/api/...`) or read the host from `window.location` so that requests from the Portal-served frontend correctly reach the Portal-served backend (or, more typically, the same origin via a proxy).
 - **Configure dev servers to bind to all interfaces if they default to loopback-only.** For example, Vite users may need `vite --host 0.0.0.0` or `server: { host: true }` in `vite.config.js` so BrowserPod's Portal layer can reach the listener.
-- **No outbound calls to arbitrary internet hosts during runtime.** You have npm registry access and git access for installs, but a running server inside the Pod is not a general-purpose outbound HTTP client. If the user's app needs to call a third-party API, that call goes through the browser's normal fetch path, subject to CORS — flag this to the user when relevant.
+- **No outbound calls to arbitrary internet hosts during runtime.** You have npm registry access and git access for installs, but a running server inside the Pod is not a general-purpose outbound HTTP client. This limitation will be lifted in the future for logged-in users.
 
 ---
 
