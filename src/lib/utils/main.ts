@@ -1,4 +1,5 @@
 import { cliConfigs, toolItems } from '$lib/config/tools';
+import { trackEvent } from './useLazyTracking';
 
 type PortalUpdate = { port: number; url: string | null; active: boolean };
 
@@ -57,6 +58,8 @@ export async function bootCLI(
 		terminal,
 		cwd: homePath
 	});
+
+	trackEvent('Booted CLI', toolLabel);
 }
 
 export async function copyFile(
