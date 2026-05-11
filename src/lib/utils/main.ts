@@ -53,13 +53,13 @@ export async function bootCLI(
 
 	terminal.write(`Starting ${toolLabel}...\n`);
 
+	trackEvent('Booted', { tool: toolLabel });
+
 	await pod.run(config.command, config.args, {
 		env: ['COLORTERM=truecolor'],
 		terminal,
 		cwd: homePath
 	});
-
-	trackEvent('Booted', { tool: toolLabel });
 }
 
 export async function copyFile(
