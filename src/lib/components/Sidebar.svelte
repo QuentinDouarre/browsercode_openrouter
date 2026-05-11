@@ -5,6 +5,7 @@
 	import Icon from '@iconify/svelte';
 	import { stepperState } from '$lib/stores/stepper.svelte';
 	import { toolItems } from '$lib/config/tools';
+	import { trackEvent } from '$lib/utils/useLazyTracking';
 
 	interface Props {
 		activePanel?: string;
@@ -118,8 +119,11 @@
 		</div>
 		<div class="relative">
 			<button
-				onclick={() => (stepperState.open = true)}
-				class="group relative flex items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65 cursor-pointer"
+				onclick={() => {
+					stepperState.open = true;
+					trackEvent('Clicked Help');
+				}}
+				class="group relative flex cursor-pointer items-center justify-center rounded-md p-2.5 text-white/30 transition-all duration-150 hover:bg-white/5 hover:text-white/65"
 			>
 				<Icon icon="mingcute:question-line" width="26" height="26" />
 
