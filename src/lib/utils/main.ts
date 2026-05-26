@@ -66,7 +66,14 @@ export async function bootCLI(
 	trackEvent('Booted', { tool: toolLabel });
 
 	await pod.run(config.command, config.args, {
-		env: ['COLORTERM=truecolor'],
+		env: [
+			'COLORTERM=truecolor',
+			'ANTHROPIC_BASE_URL=https://openrouter.ai/api',
+			'ANTHROPIC_MODEL=~anthropic/claude-sonnet-latest',
+			'CLAUDE_CODE_EFFORT_LEVEL=high',
+			`ANTHROPIC_AUTH_TOKEN=${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+			'ANTHROPIC_API_KEY=""',
+		],
 		terminal,
 		cwd: homePath
 	});
